@@ -44,7 +44,7 @@ After everything was cleaned and finalized, we had the following data dictionary
 |**2_yr**|*float*|2_yr Daily Treasury Par Yield Curve Rates|
 |**3_yr**|*float*|3_yr Daily Treasury Par Yield Curve Rates|
 |**5_yr**|*float*|5_yr Daily Treasury Par Yield Curve Rates|
-|**7_myr**|*float*|7_yr Daily Treasury Par Yield Curve Rates|
+|**7_yr**|*float*|7_yr Daily Treasury Par Yield Curve Rates|
 |**10_yr**|*float*|10_yr Daily Treasury Par Yield Curve Rates|
 |**20_yr**|*float*|20_yr Daily Treasury Par Yield Curve Rates|
 |**federal funds rate**|*int*|Interest rate at which depository institutions lend balances held at the Federal Reserve to other depository institutions overnight; If value was better expected than forecast or unknown, marked as a 1|
