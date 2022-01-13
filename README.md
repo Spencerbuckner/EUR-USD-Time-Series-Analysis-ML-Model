@@ -2,29 +2,30 @@
 
 ## Problem Statement:
 
-To gain a better understanding of the Forex market (specifically the EUR/USD currency), I am investigating trends and possible patterns over the last 17 years. I will then take these findings into creating predictions on the EUR/USD currency and then see if any insights are gained with using machine learning to creating future predictions.
+To gain a better understanding of the Forex market (EUR/USD currency), I am investigating the relationship between technical price data and underlying economic indicators over the past 17 years. I will then take these findings into creating next day predictions on EUR/USD with machine learning.
 
 ## Data Gathering
 
-Data is gathered as Technical or Fundamental data. Technical data is looking at only the price info. Fundamental data is gathered by looking at economic indicators present in both EU and the USA. 
+Data is gathered as Technical or Fundamental data. Technical data is looking at only the price info (Open, High, Low, Close). Fundamental data is gathered by looking at economic indicators present in both EU and the USA. 
 
 ### Technical Data:
 
-Initial Forex Technical data was collected from a Kaggle dataset which produced price info on EUR/USD from 5/1/2005-4/29/2020. [EUR/USD Price Data 2005-2020](https://www.kaggle.com/imetomi/eur-usd-forex-pair-historical-data-2002-2019)
+Initial Forex Technical data was collected from a Kaggle dataset which provided price info on EUR/USD from 5/1/2005-4/29/2020. [EUR/USD Price Data 2005-2020](https://www.kaggle.com/imetomi/eur-usd-forex-pair-historical-data-2002-2019)
 
-Data past the dates listed above was gathered from WSJ and cover 5/1/2020-12/31/2021. [EUR/USD Price Data 2020-2021](https://www.wsj.com/market-data/quotes/fx/EURUSD/historical-prices)
+Data past the above dates was gathered from WSJ and cover 5/1/2020-12/31/2021. [EUR/USD Price Data 2020-2021](https://www.wsj.com/market-data/quotes/fx/EURUSD/historical-prices)
 
 ### Fundamental Data
 
-Fundamental Data on Daily Treasury Yield Curve Rates [Daily Treasury Yield Curve Rates](https://www.treasury.gov/resource-center/data-chart-center/interest-rates/pages/TextView.aspx?data=yieldYear&year=2019)
+Fundamental Data on Daily Treasury Yield Curve Rates from treasury.gov [Daily Treasury Yield Curve Rates](https://www.treasury.gov/resource-center/data-chart-center/interest-rates/pages/TextView.aspx?data=yieldYear&year=2019)
 
 Fundamental Economic Data for Europe and the United States was collected from forexfactory.com [Forex Factory](https://www.forexfactory.com/)
 
 ## Data Cleaning
 
 - Fortunately, most of the data was clean and there were not too many null values
-- Since the 2 of the 3 main sources were only given as daily updates (business/non-holiday days only), the technical price data was resampled to business days only. This dropped roughly 3% of the days due to the Forex market being open 24/5, and most the days dropped were holidays. This brough the yearly average of days down to ~250 days worth of data a year.
-- Yield curve rates on 2 month and 30 year were dropped due to > 50% of data missing from source. The 2-month constant maturity series began on October 16, 2018, so all date for previous years were null due to the data not existing.
+- Since the 2 of the 3 main sources were only given as daily updates (business/non-holiday days only), the technical price data was resampled to business days only. This dropped roughly 3% of the days due to the Forex market being open 24/5, and most of the days dropped were holidays. This brought the yearly average of days down to ~250 days a year.
+- Yield curve rates on 2 month and 30 year were dropped due to > 50% of data missing from source. The 2-month constant maturity series began on October 16, 2018, so all data for previous years were null due to this product not existing.
+- Economic data from forex factory was converted into a binary output. If the data was a better result than the expected forcast, it was marked as 1, else a 0.
 
 After everything was cleaned and finalized, we had the following data dictionary:
 
@@ -58,7 +59,7 @@ After everything was cleaned and finalized, we had the following data dictionary
 
 ## EDA
 
-As we look to find trends or other insights before we start modeling, we are going to take look at the Bid Close first. Due to the nature of this market being open 24/5, the Bid Close is almost going to always be equal to the next day Bid Open. This is due to both measurements are taken at the same time (5 pm EST). Although predicting the open would be fine for several investments, it won't help with our analysis on this market today.
+As we look to find trends or other insights before we start modeling, we are going to take look at the Bid Close first. Due to the nature of this market being open 24/5, the Bid Close is almost going to always be equal to the next day Bid Open. This is due to both measurements are taken at the same time (5 pm EST, New York Close). Although predicting the open would be fine for several investments, it won't help with our analysis on this market today.
 
 ![](./visualizations/EURUSD_Hourly_BC.png)
 
@@ -68,17 +69,17 @@ Transforming our data into the diff and percent diff, we can see the following r
 
 As we can see, the largest amount of diff and percent change is in areas of higher volatility. The time surrounding the financial crisis in 2008-2009, elections in 2016, and the beginning of the pandemic 2020. Both diff and percent change show how these uncertain times produce more chaos and therefore higher volatility.
 
-Moving on towards correlation, we produced two different heatmaps going over. First, we created a new data frame creating rolling averages from 2 to 30 days and their respective standard deviations:
+Moving on towards correlation, we produced two different heatmaps to go over. First, we created a new data frame with rolling averages from 2 to 30 days and their respective standard deviations. This was done to see if there is any correlation in the rollin average and deviation of different features with our target (next day bid close):
 
 ![](./visualizations/rolling_avg_std_corr_heatmap.png)
 
-What we found was surprising, the correlation between all of the rolling averages and deviations did not perform and show any type of connection to the next day bid close price.
+What we found was surprising, the correlation between all of the rolling averages and deviations did not show any type of significant correlation to the next day bid close price.
 
-To gain better insight, we then turned our eyes towards what we had chosen as our model features and ran the following heatmap:
+I then turned towards what we had chosen as our final model features and ran the following heatmap:
 
 ![](./visualizations/tommorow_bid_close_corr_heatmap.png)
 
-To no surprise, all the technical data was highly correlated producing high correlation values. Our greatest observation that we have found from this is that the higher timeframe yield curve rates produced the highest correlation to our target. This is an interesting takeaway and something we will look to expand upon for future iterations of our model.
+To no surprise, all the technical data was highly correlated producing high correlation values. Our greatest observation that we have found from this is that the higher timeframe yield curve rates produced the highest correlation to our target. This is an interesting takeaway and something we will look to expand upon for future iterations of our model. Other economic indicators produced close to 0 correlation, so furthur exploration will need to be made into why that is so and whether the dats should be binary will be investigated in future models.
 
 Now that we have a good idea of our features and our target, let's move on to modeling.
 
@@ -99,17 +100,17 @@ After extensive hyperparameter tuning, the model was able to create predictions 
 
 ![](./visualizations/test_data_model_bc_predicted_vs_actual_results.png)
 
-The R2 score for the above model was 0.99.
+The R2 score for the above model was 0.99, meaning that roughly 99% of the observed variation can be explained by this model's inputs.
 
-Great length was taken to ensure that the model did not have data leakage and that the model predictions were in fact accurate. Due to myself being paranoid though, I continued with even more test data and gathered data from 5/1/2020 through 12/31/2021. As we tested this model on even more unknown data, it should give us a better understanding of the longevity of this model.
+Great length was taken to ensure that the model did not have data leakage and that the model predictions were in fact accurate. Due to always wanting to double check results, I continued with even more test data and gathered data from 5/1/2020 through 12/30/2021. As we tested this model on even more unknown data, it should give a better understanding of this models longevity.
 
 ![](./visualizations/unknown_future_data_model_tommorow_bc_results.png)
 
-The R2 score for the above model was 0.83.
+The R2 score for the above model was 0.83, meaning that roughly 83% of the observed variation can be explained by this model's inputs.
 
-As we can see, there is a large divergence in the first year between the model prediction and the actual values. Due to there being several unknown factors not in my model and this period being the beginning/first few months of the pandemic, the high volatility has appeared to create a divergence. As things had started to settle down around the new year, the model became better at predicting more accurate values.
+As we can see, there is a large divergence in the first year between the model prediction and the actual values. Due to there being several unknown factors not in my model and this period being the beginning/first few months of the pandemic, the high volatility has appeared to create a divergence between actual data and my predicted values. As things had started to settle down around the new year, the model became better at predicting more accurate values.
 
-One thing to notice that is evident in both models, while they can seem to follow a trend generally well, both test cases suffer from not being able to predict inflection points. This makes sense due to those points being cause for a myriad of reasons, and this model wanting to predict in the same general direction as the data has been moving towards for days/weeks.
+One thing to note that is evident in both models, while they can seem to follow a trend generally well, both test cases suffer from not being able to predict inflection points. This makes sense due to those points being cause for a myriad of reasons, and this model wanting to predict in the same general direction as the data has been moving towards for days/weeks.
 
 For both test time frames, if we produced a simple buy/sell and hold strategy with direction predicted only by the model for the next day, we have interesting results. Both strategies would lose money holding until next day bid close over, but if a risk to reward of 1:2 was established, the results are drastically different. The initial test time frame had an almost breakeven profit, while the second testing data produced significant profit.
 
@@ -118,6 +119,6 @@ For both test time frames, if we produced a simple buy/sell and hold strategy wi
 
 ## Conclusion
 
-The most interesting thing that was noticed during EDA was that the yield curve rates for higher time frame rates all produced much higher correlations than their respective short term counter parts. As I create future models, this will be something to investigate further, and additional rates and data will be explored.
+The most interesting thing found during EDA was that the yield curve rates for higher time frame periods all produced higher correlations than their respective short term counter parts. As I create future models, this will be something to investigate further, and additional rates and data will be explored.
 
-The LSTM model did a few things very well. As trends continued, it was able to stay within a relative range in the same direction predicting the next day bid close. Due to the model not being able to predict inflection points well, the strategy employed above of buy/sell and holding has several days of losses around these points, but still was able to produce a profit when utilizing risk to reward. Since the model was able to follow the trend for most days, other strategies will be tested, and their effectiveness will be compared.
+The LSTM model did a few things very well. As trends continued, it was able to stay within a relative range in the same direction predicting the next day bid close. Due to the model not being able to predict inflection points well, the strategy employed above of buy/sell and holding has several days of losses around these points, but still was able to produce a profit when implementing a risk to reward. Since the model was able to follow the trend for most days, other strategies will be tested, and their effectiveness will be compared.
