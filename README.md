@@ -10,15 +10,15 @@ Data is gathered as Technical or Fundamental data. Technical data is looking at 
 
 ### Technical Data:
 
-Initial Forex Technical data was collected from a Kaggle dataset which produced price info on EUR/USD from 5/1/2005-4/29/2020. [EUR/USD Price Data 2005-2020] (https://www.kaggle.com/imetomi/eur-usd-forex-pair-historical-data-2002-2019)
+Initial Forex Technical data was collected from a Kaggle dataset which produced price info on EUR/USD from 5/1/2005-4/29/2020. [EUR/USD Price Data 2005-2020](https://www.kaggle.com/imetomi/eur-usd-forex-pair-historical-data-2002-2019)
 
-Data past the dates listed above was gathered from WSJ and cover 5/1/2020-12/31/2021. [EUR/USD Price Data 2020-2021] (https://www.wsj.com/market-data/quotes/fx/EURUSD/historical-prices)
+Data past the dates listed above was gathered from WSJ and cover 5/1/2020-12/31/2021. [EUR/USD Price Data 2020-2021](https://www.wsj.com/market-data/quotes/fx/EURUSD/historical-prices)
 
 ### Fundamental Data
 
-Fundamental Data on Daily Treasury Yield Curve Rates [Daily Treasury Yield Curve Rates] (https://www.treasury.gov/resource-center/data-chart-center/interest-rates/pages/TextView.aspx?data=yieldYear&year=2019)
+Fundamental Data on Daily Treasury Yield Curve Rates [Daily Treasury Yield Curve Rates](https://www.treasury.gov/resource-center/data-chart-center/interest-rates/pages/TextView.aspx?data=yieldYear&year=2019)
 
-Fundamental Economic Data for Europe and the United States was collected from forexfactory.com [Forex Factory] (https://www.forexfactory.com/)
+Fundamental Economic Data for Europe and the United States was collected from forexfactory.com [Forex Factory](https://www.forexfactory.com/)
 
 ## Data Cleaning
 
@@ -97,13 +97,13 @@ To evaluate our model for hyperparameter tuning, the Mean Absolute Percentage Er
 
 After extensive hyperparameter tuning, the model was able to create predictions on the initial test data time frame below:
 
-![]('./visualizations/test_data_model_bc_predicted_vs_actual_results.png')
+![](./visualizations/test_data_model_bc_predicted_vs_actual_results.png)
 
 The R2 score for the above model was 0.99.
 
 Great length was taken to ensure that the model did not have data leakage and that the model predictions were in fact accurate. Due to myself being paranoid though, I continued with even more test data and gathered data from 5/1/2020 through 12/31/2021. As we tested this model on even more unknown data, it should give us a better understanding of the longevity of this model.
 
-![](./visualizations/unknown_future_data_model_tommorow_bc_results.png')
+![](./visualizations/unknown_future_data_model_tommorow_bc_results.png)
 
 The R2 score for the above model was 0.83.
 
@@ -113,7 +113,7 @@ One thing to notice that is evident in both models, while they can seem to follo
 
 For both test time frames, if we produced a simple buy/sell and hold strategy with direction predicted only by the model for the next day, we have interesting results. Both strategies would lose money holding until next day bid close over, but if a risk to reward of 1:2 was established, the results are drastically different. The initial test time frame had an almost breakeven profit, while the second testing data produced significant profit.
 
-![](./visualizations/model_profit.PNG')
+![](./visualizations/model_profit.PNG)
 
 
 ## Conclusion
